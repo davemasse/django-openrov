@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OpenROV Mapping</title>
+  <style type="text/css">
+    html {
+      height: 100%;
+    }
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #map_canvas {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <script type="text/javascript">
+    var map;
+    
+    function initialize() {
+      var myOptions = {
+        center: new google.maps.LatLng({{ locations.0.lat }}, {{ locations.0.lng }}),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        maxZoom: 17
+      };
+      map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+      
+      var bounds = new google.maps.LatLngBounds();
+      {% for location in locations %}
+        var latLng = new google.maps.LatLng({{ location.lat }}, {{ location.lng }});
+        new google.maps.Marker({
+          position: latLng,
+          map: map,
+          title: '{{ location.description|addslashes|linebreaksbr }}'
+        });
+        bounds.extend(latLng);
+        map.fitBounds(bounds);
+      {% endfor %}
+    }
+  </script>
+</head>
+<body onload="initialize()">
+  <div id="map_canvas">
+  </div>
+</body>
+</html>
