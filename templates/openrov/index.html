@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,28 +18,51 @@
     }
   </style>
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <script type="text/javascript" src="{% static "openrov/js/markerclusterer.js" %}"></script>
+  <script type="text/javascript" src="{% static "openrov/js/infobubble.js" %}"></script>
   <script type="text/javascript">
-    var map;
+    var infowindow, map;
     
     function initialize() {
       var myOptions = {
-        center: new google.maps.LatLng({{ locations.0.lat }}, {{ locations.0.lng }}),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        maxZoom: 17
+        maxZoom: 18
       };
       map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+      mi = new google.maps.MarkerImage('{% static "openrov/images/openrov_marker.png" %}', new google.maps.Size(79, 79), new google.maps.Point(0, 0), new google.maps.Point(0, 0), new google.maps.Size(40, 40));
       
       var bounds = new google.maps.LatLngBounds();
+      var markers = [];
       {% for location in locations %}
         var latLng = new google.maps.LatLng({{ location.lat }}, {{ location.lng }});
-        new google.maps.Marker({
-          position: latLng,
+        marker = new google.maps.Marker({
+          icon: mi,
           map: map,
+          position: latLng,
           title: '{{ location.description|addslashes|linebreaksbr }}'
         });
+        google.maps.event.addListener(marker, 'click', function() {
+          // Close any open infowindow
+          if (infowindow) {
+            infowindow.close();
+          }
+          infowindow = new google.maps.InfoWindow({
+            content: '{{ location.description }}'
+          });
+          infowindow.open(map, this);
+        })
+        markers.push(marker);
         bounds.extend(latLng);
         map.fitBounds(bounds);
       {% endfor %}
+      
+      var marker_clusterer_options = {
+        gridSize: 100,
+        maxZoom: 17,
+        minimumClusterSize: 2
+      };
+      
+      marker_cluster = new MarkerClusterer(map, markers, marker_clusterer_options);
     }
   </script>
 </head>
