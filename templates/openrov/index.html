@@ -47,7 +47,7 @@
             infowindow.close();
           }
           infowindow = new google.maps.InfoWindow({
-            content: '{{ location.description }}'
+            content: '{{ location.description }}{% if location.video_url %}<br /><br /><iframe width="560" height="315" src="{{ location.video_url }}" frameborder="0" allowfullscreen></iframe>{% endif %}'
           });
           infowindow.open(map, this);
         })
