@@ -49,10 +49,10 @@ class Command(BaseCommand):
       lat = remote_note['location']['features'][0]['geometry']['coordinates'][1]
       lng = remote_note['location']['features'][0]['geometry']['coordinates'][0]
       
-      matches = re.search(r'(?P<video_url>http://(?:www\.)?youtube.com/[^ $\n]+)', remote_text)
+      matches = re.search(r'(?P<video_url>http://(?:www\.)?youtube.com/watch\?\S*?v=(?P<video_id>[^&]+)\S*)', remote_text)
       if matches != None:
-        location.video_url = matches.group('video_url')
-        remote_text = remote_text.replace(' %s' % location.video_url, '')
+        location.video_id = matches.group('video_id')
+        remote_text = remote_text.replace(' %s' % matches.group('video_url'), '')
       location.description = re.sub(r' *#[^ ]+', '', remote_text)
       location.remote_text = remote_text
       location.remote_date_created = remote_date_created

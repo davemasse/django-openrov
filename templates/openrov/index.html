@@ -47,10 +47,10 @@
             infowindow.close();
           }
           infowindow = new google.maps.InfoWindow({
-            content: '{{ location.description }}{% if location.video_url %}<br /><br /><iframe width="560" height="315" src="{{ location.video_url }}" frameborder="0" allowfullscreen></iframe>{% endif %}'
+            content: '{{ location.description }}{% if location.video_id %}<br /><br /><iframe width="560" height="315" src="http://www.youtube.com/embed/{{ location.video_id }}/" frameborder="0" allowfullscreen></iframe>{% endif %}'
           });
           infowindow.open(map, this);
-        })
+        });
         markers.push(marker);
         bounds.extend(latLng);
         map.fitBounds(bounds);
