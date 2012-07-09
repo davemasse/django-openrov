@@ -16,6 +16,17 @@
       width: 100%;
       height: 100%;
     }
+    #infowindow {
+      width: 560px;
+      padding: 0.75em 0 0;
+      font-family: helvetica, sans-serif;
+      font-size: 0.85em;
+    }
+    #infowindow .date {
+      float: right;
+      padding: 0 0 1em 1em;
+      font-size: 0.9em;
+    }
   </style>
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
   <script type="text/javascript" src="{% static "openrov/js/markerclusterer.js" %}"></script>
@@ -49,7 +60,7 @@
             infowindow.close();
           }
           infowindow = new google.maps.InfoWindow({
-            content: '{{ location.description }}{% if location.video_set.all.count %}{% for video in location.video_set.all %}<br /><br /><iframe width="560" height="315" src="http://www.youtube.com/embed/{{ video.video_id }}/" frameborder="0" allowfullscreen></iframe>{% endfor %}{% endif %}'
+            content: '<div id="infowindow"><div class="date">{{ location.remote_date_created }}</div>{{ location.description }}</div>{% if location.video_set.all.count %}{% for video in location.video_set.all %}<br /><br /><iframe width="560" height="315" src="http://www.youtube.com/embed/{{ video.video_id }}/" frameborder="0" allowfullscreen></iframe>{% endfor %}{% endif %}'
           });
           infowindow.open(map, this);
         });
