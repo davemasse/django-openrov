@@ -6,10 +6,10 @@ import time
 import urllib2
 
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from openrov.models import Location
+from openrov.models import Location, Video
 
 class Command(BaseCommand):
   help = 'Collects remote text via Catch API'
@@ -49,13 +49,14 @@ class Command(BaseCommand):
       lat = remote_note['location']['features'][0]['geometry']['coordinates'][1]
       lng = remote_note['location']['features'][0]['geometry']['coordinates'][0]
       
-      matches = re.search(r'(?P<video_url>http://(?:www\.)?youtube.com/watch\?\S*?v=(?P<video_id>[^&]+)\S*)', remote_text)
-      if matches != None:
-        location.video_id = matches.group('video_id')
-        remote_text = remote_text.replace(' %s' % matches.group('video_url'), '')
-      location.description = re.sub(r' *#[^ ]+', '', remote_text)
-      location.remote_text = remote_text
       location.remote_date_created = remote_date_created
       location.lat = lat
       location.lng = lng
+      location.save()
+      
+      for matches in re.finditer(r'(?P<video_url>http://(?:www\.)?youtube.com/watch\?\S*?v=(?P<video_id>[^&\s]+))', remote_text):
+        Video.objects.get_or_create(location=location, video_id=matches.group('video_id'))
+        remote_text = remote_text.replace(' %s' % matches.group('video_url'), '')
+      location.remote_text = remote_text
+      location.description = location.description = re.sub(r' *#[^ ]+', '', remote_text)
       location.save()

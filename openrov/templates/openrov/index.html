@@ -29,7 +29,7 @@
         maxZoom: 18
       };
       map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-      mi = new google.maps.MarkerImage('{% static "openrov/images/openrov_marker.png" %}', new google.maps.Size(79, 79), new google.maps.Point(0, 0), new google.maps.Point(0, 0), new google.maps.Size(40, 40));
+      mi = new google.maps.MarkerImage('{% static "openrov/images/openrov_marker.png" %}', new google.maps.Size(79, 79), new google.maps.Point(0, 0), new google.maps.Point(0, 0), new google.maps.Size(32, 32));
       
       var bounds = new google.maps.LatLngBounds();
       var markers = [];
@@ -47,7 +47,7 @@
             infowindow.close();
           }
           infowindow = new google.maps.InfoWindow({
-            content: '{{ location.description }}{% if location.video_id %}<br /><br /><iframe width="560" height="315" src="http://www.youtube.com/embed/{{ location.video_id }}/" frameborder="0" allowfullscreen></iframe>{% endif %}'
+            content: '{{ location.description }}{% if location.video_set.all.count %}{% for video in location.video_set.all %}<br /><br /><iframe width="560" height="315" src="http://www.youtube.com/embed/{{ video.video_id }}/" frameborder="0" allowfullscreen></iframe>{% endfor %}{% endif %}'
           });
           infowindow.open(map, this);
         });

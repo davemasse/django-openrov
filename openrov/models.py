@@ -7,7 +7,6 @@ class Location(models.Model):
   remote_date_created = models.DateTimeField(null=True, blank=True)
   remote_date_modified = models.DateTimeField()
   description = models.TextField(null=True, blank=True)
-  video_id = models.CharField(max_length=100, null=True, blank=True)
   lat = models.DecimalField(max_digits=10, decimal_places=8, null=True, verbose_name='latitude')
   lng = models.DecimalField(max_digits=10, decimal_places=8, null=True, verbose_name='longitude')
   
@@ -18,3 +17,12 @@ class Location(models.Model):
   
   def __unicode__(self):
     return self.remote_id
+
+class Video(models.Model):
+  location = models.ForeignKey(Location)
+  video_id = models.CharField(max_length=100, null=True, blank=True)
+  
+  class Meta:
+    ordering = ('video_id',)
+    verbose_name = _('video')
+    verbose_name = _('videos')
