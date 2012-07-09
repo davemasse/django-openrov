@@ -30,6 +30,7 @@
       };
       map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
       mi = new google.maps.MarkerImage('{% static "openrov/images/openrov_marker.png" %}', new google.maps.Size(79, 79), new google.maps.Point(0, 0), new google.maps.Point(0, 0), new google.maps.Size(32, 32));
+      ms = new google.maps.MarkerImage('{% static "openrov/images/openrov_shadow.png" %}', new google.maps.Size(119, 79), new google.maps.Point(0, 0), new google.maps.Point(0, 0), new google.maps.Size(48, 32));
       
       var bounds = new google.maps.LatLngBounds();
       var markers = [];
@@ -39,6 +40,7 @@
           icon: mi,
           map: map,
           position: latLng,
+          shadow: ms,
           title: '{{ location.description|addslashes|linebreaksbr }}'
         });
         google.maps.event.addListener(marker, 'click', function() {
