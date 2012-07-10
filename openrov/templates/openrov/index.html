@@ -59,7 +59,7 @@
             infowindow.close();
           }
           infowindow = new google.maps.InfoWindow({
-            content: '<div id="infowindow"><div class="date">{{ location.remote_date_created }}</div>{{ location.description }}</div>{% if location.video_set.all.count %}{% for video in location.video_set.all %}<br /><br /><iframe width="560" height="315" src="http://www.youtube.com/embed/{{ video.video_id }}/" frameborder="0" allowfullscreen></iframe>{% endfor %}{% endif %}'
+            content: '<div id="infowindow"><div class="date">{{ location.remote_date_created }}</div>{{ location.description|linebreaksbr }}</div>{% if location.video_set.all.count %}{% for video in location.video_set.all %}<br /><br /><iframe width="560" height="315" src="http://www.youtube.com/embed/{{ video.video_id }}/" frameborder="0" allowfullscreen></iframe>{% endfor %}{% endif %}'
           });
           infowindow.open(map, this);
         });
