@@ -4,6 +4,7 @@ import re
 import simplejson
 import time
 import urllib2
+from optparse import make_option
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -13,6 +14,13 @@ from openrov.models import Location, Video
 
 class Command(BaseCommand):
   help = 'Collects remote text via Catch API'
+  option_list = BaseCommand.option_list + (
+    make_option('-d', '--delete',
+      action='store_true',
+      dest='delete',
+      default=False,
+      help='Delete any local Location objects that don\'t exist on the remote side.'),
+    )
   
   def handle(self, *args, **options):
     request = urllib2.Request('https://api.catch.com/v2/search.json?q=#openrov&sort=modified_asc&limit=1000')
@@ -22,9 +30,11 @@ class Command(BaseCommand):
     data = simplejson.loads(result.read())
     
     notes = data.get('notes', [])
+    remote_ids = []
     
     for note in notes:
       remote_id = note['id']
+      remote_ids.append(remote_id)
       remote_date_modified = note['server_modified_at']
       remote_date_modified = datetime.datetime.strptime(remote_date_modified, '%Y-%m-%dT%H:%M:%S.%fZ')
       remote_date_modified = remote_date_modified.replace(tzinfo=timezone.utc)
@@ -60,3 +70,7 @@ class Command(BaseCommand):
       location.remote_text = remote_text
       location.description = location.description = re.sub(r' *#[^ ]+', '', remote_text)
       location.save()
+    
+    # Delete Location objects that don't exist remotely
+    if options.get('delete') == True:
+      Location.objects.exclude(remote_id__in=remote_ids).delete()
