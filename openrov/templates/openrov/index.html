@@ -8,9 +8,27 @@
       height: 100%;
     }
     body {
+      position: relative;
       height: 100%;
       margin: 0;
       padding: 0;
+    }
+    #banner {
+      position: absolute;
+      bottom: 1em;
+      z-index: 1;
+      width: 100%;
+      font-family: helvetica, arial, sans-serif;
+      text-align: center;
+    }
+    #banner a {
+      padding: 1em;
+      line-height: 3em;
+      color: #000;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(0, 0, 0, 0.75);
+      border-radius: 1.5em;
     }
     #map_canvas {
       width: 100%;
@@ -63,7 +81,7 @@
   </script>
 </head>
 <body onload="initialize()">
-  <div id="map_canvas">
-  </div>
+  <div id="banner"><a href="https://github.com/davemasse/django-openrov" target="_blank">Django code available at GitHub</a></div>
+  <div id="map_canvas"></div>
 </body>
 </html>
