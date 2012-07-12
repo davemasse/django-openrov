@@ -26,3 +26,6 @@ class Video(models.Model):
     ordering = ('video_id',)
     verbose_name = _('video')
     verbose_name = _('videos')
+  
+  def __unicode__(self):
+    return self.video_id
