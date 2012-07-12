@@ -29,52 +29,36 @@
     }
   </style>
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-  <script type="text/javascript" src="{% static "openrov/js/markerclusterer.js" %}"></script>
+  <script type="text/javascript" src="{% static 'openrov/js/markerclusterer.js' %}"></script>
+  <script type="text/javascript" src="{% static 'openrov/js/openrov.js' %}"></script>
   <script type="text/javascript">
-    var infowindow, map;
+    var openrov;
     
     function initialize() {
-      var myOptions = {
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        maxZoom: 18
+      var options = {
+        static_url: '{{ STATIC_URL }}'
       };
-      map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-      mi = new google.maps.MarkerImage('{% static "openrov/images/openrov_marker.png" %}', new google.maps.Size(79, 79), new google.maps.Point(0, 0), new google.maps.Point(0, 0), new google.maps.Size(32, 32));
-      ms = new google.maps.MarkerImage('{% static "openrov/images/openrov_shadow.png" %}', new google.maps.Size(119, 79), new google.maps.Point(0, 0), new google.maps.Point(0, 0), new google.maps.Size(48, 32));
+      openrov = new OpenROV(options);
       
-      var bounds = new google.maps.LatLngBounds();
-      var markers = [];
       {% for location in locations %}
-        var latLng = new google.maps.LatLng({{ location.lat }}, {{ location.lng }});
-        marker = new google.maps.Marker({
-          icon: mi,
-          map: map,
-          position: latLng,
-          shadow: ms,
+        var marker_info = new MarkerInfo({
+          infowindow: '<div id="infowindow"><div class="date">{{ location.remote_date_created }}</div>{{ location.description|linebreaksbr }}</div>{% if location.video_set.all.count %}{% for video in location.video_set.all %}<br /><br /><iframe width="560" height="315" src="http://www.youtube.com/embed/{{ video.video_id }}/" frameborder="0" allowfullscreen></iframe>{% endfor %}{% endif %}',
+          lat: {{ location.lat }},
+          lng: {{ location.lng }},
           title: '{{ location.description|addslashes|linebreaksbr }}'
         });
-        google.maps.event.addListener(marker, 'click', function() {
-          // Close any open infowindow
-          if (infowindow) {
-            infowindow.close();
-          }
-          infowindow = new google.maps.InfoWindow({
-            content: '<div id="infowindow"><div class="date">{{ location.remote_date_created }}</div>{{ location.description|linebreaksbr }}</div>{% if location.video_set.all.count %}{% for video in location.video_set.all %}<br /><br /><iframe width="560" height="315" src="http://www.youtube.com/embed/{{ video.video_id }}/" frameborder="0" allowfullscreen></iframe>{% endfor %}{% endif %}'
-          });
-          infowindow.open(map, this);
-        });
-        markers.push(marker);
-        bounds.extend(latLng);
-        map.fitBounds(bounds);
+        openrov.addMarker(marker_info);
       {% endfor %}
       
-      var marker_clusterer_options = {
+      openrov.initialize();
+      
+      var clusterer_options = {
         gridSize: 100,
         maxZoom: 17,
         minimumClusterSize: 2
       };
       
-      marker_cluster = new MarkerClusterer(map, markers, marker_clusterer_options);
+      var marker_cluster = new MarkerClusterer(openrov.map, openrov.markers, clusterer_options);
     }
   </script>
 </head>
