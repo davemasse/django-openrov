@@ -8,7 +8,7 @@ class Location(models.Model):
   remote_date_modified = models.DateTimeField()
   description = models.TextField(null=True, blank=True)
   lat = models.DecimalField(max_digits=10, decimal_places=8, null=True, verbose_name='latitude')
-  lng = models.DecimalField(max_digits=10, decimal_places=8, null=True, verbose_name='longitude')
+  lng = models.DecimalField(max_digits=11, decimal_places=8, null=True, verbose_name='longitude')
   
   class Meta:
     ordering = ('-remote_date_created',)
