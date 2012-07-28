@@ -28,10 +28,10 @@ class Command(BaseCommand):
     offset = 0
     
     # Get into the loop
-    count = 10
+    count = PAGE_SIZE
     page_num = 0
     
-    while count == 10:
+    while count == PAGE_SIZE:
       params = {
         'full': True,
         'limit': PAGE_SIZE,
