@@ -1,6 +1,9 @@
+from __future__ import unicode_literals
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+@python_2_unicode_compatible
 class Location(models.Model):
   remote_id = models.CharField(max_length=100, unique=True)
   remote_text = models.TextField(null=True, blank=True)
@@ -14,10 +17,11 @@ class Location(models.Model):
     ordering = ('-remote_date_created',)
     verbose_name = _('location')
     verbose_name_plural = _('locations')
-  
-  def __unicode__(self):
-    return self.remote_id
 
+  def __str__(self):
+    return '%s,%s' % (self.lat, self.lng,)
+
+@python_2_unicode_compatible
 class Video(models.Model):
   location = models.ForeignKey(Location)
   video_id = models.CharField(max_length=100, null=True, blank=True)
@@ -25,7 +29,7 @@ class Video(models.Model):
   class Meta:
     ordering = ('video_id',)
     verbose_name = _('video')
-    verbose_name = _('videos')
+    verbose_name_plural = _('videos')
   
-  def __unicode__(self):
+  def __str__(self):
     return self.video_id
