@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
@@ -12,6 +13,7 @@ def index(request):
     'locations': locations,
   })
 
+@login_required
 def add_location(request):
   if request.method == 'POST':
     location_form = LocationForm(request.POST)
