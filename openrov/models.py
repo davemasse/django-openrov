@@ -5,10 +5,10 @@ from django.utils.translation import ugettext_lazy as _
 
 @python_2_unicode_compatible
 class Location(models.Model):
-  text = models.TextField(null=True, blank=True)
+  title = models.CharField(max_length=255)
+  description = models.TextField(null=True, blank=True)
   date_created = models.DateTimeField(auto_now_add=True)
   date_modified = models.DateTimeField(auto_now=True)
-  description = models.TextField(null=True, blank=True)
   lat = models.DecimalField(max_digits=10, decimal_places=8, null=True, verbose_name='latitude')
   lng = models.DecimalField(max_digits=11, decimal_places=8, null=True, verbose_name='longitude')
   
@@ -18,7 +18,7 @@ class Location(models.Model):
     verbose_name_plural = _('locations')
 
   def __str__(self):
-    return '%s,%s' % (self.lat, self.lng,)
+    return '%s (%s,%s)' % (self.title, self.lat, self.lng,)
 
 @python_2_unicode_compatible
 class Video(models.Model):
