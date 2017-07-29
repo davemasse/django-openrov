@@ -5,16 +5,15 @@ from django.utils.translation import ugettext_lazy as _
 
 @python_2_unicode_compatible
 class Location(models.Model):
-  remote_id = models.CharField(max_length=100, unique=True)
-  remote_text = models.TextField(null=True, blank=True)
-  remote_date_created = models.DateTimeField(null=True, blank=True)
-  remote_date_modified = models.DateTimeField()
+  text = models.TextField(null=True, blank=True)
+  date_created = models.DateTimeField(auto_now_add=True)
+  date_modified = models.DateTimeField(auto_now=True)
   description = models.TextField(null=True, blank=True)
   lat = models.DecimalField(max_digits=10, decimal_places=8, null=True, verbose_name='latitude')
   lng = models.DecimalField(max_digits=11, decimal_places=8, null=True, verbose_name='longitude')
   
   class Meta:
-    ordering = ('-remote_date_created',)
+    ordering = ('-date_created',)
     verbose_name = _('location')
     verbose_name_plural = _('locations')
 

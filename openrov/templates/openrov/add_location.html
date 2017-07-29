@@ -1,0 +1,9 @@
+{% block title %}Add a new location{% endblock %}
+
+{% block content %}
+  <form action="" method="post">{% csrf_token %}
+    {{ location_form }}
+
+    <input type="submit" value="Submit">
+  </form>
+{% endblock %}
