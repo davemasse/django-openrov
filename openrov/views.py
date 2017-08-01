@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
@@ -10,6 +11,7 @@ def index(request):
   locations = Location.objects.all()
   
   return render(request, 'openrov/index.html', {
+    'MOMENT_DATETIME_FORMAT': settings.MOMENT_DATETIME_FORMAT,
     'locations': locations,
   })
 

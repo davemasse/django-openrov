@@ -1,4 +1,5 @@
 function OpenROV(options) {
+  this.datetime_format = options.datetime_format || '';
   this.infowindow = null;
   this.map_icon = options.map_icon || new google.maps.MarkerImage(options.static_url + 'openrov/images/openrov_marker.png',
     new google.maps.Size(79, 79),
@@ -43,6 +44,14 @@ OpenROV.prototype.initialize = function() {
           content: instance.marker_info[i].infowindow
         });
         instance.infowindow.open(instance.map, this);
+        google.maps.event.addListener(instance.infowindow, 'domready', function() {
+          $('.date').each(function() {
+            var $this = $(this),
+                datetime = moment($this.text()).format(instance.datetime_format);
+
+            $this.text(datetime);
+          });
+        });
       });
       bounds.extend(lat_lng);
       instance.map.fitBounds(bounds);
